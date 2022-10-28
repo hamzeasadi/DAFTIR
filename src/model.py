@@ -16,9 +16,10 @@ class NIRTNN2diff(nn.Module):
         self.blk2 = self._blk(blk=model_temp['blk2'])
         self.blk3 = self._blk(blk=model_temp['blk3'])
         self.blk4 = self._blk(blk=model_temp['blk4'])
+        self.blk5 = self._blk(blk=model_temp['blk5'])
 
-        self.reg = nn.Sequential(nn.Flatten(), nn.Linear(in_features=model_temp['blk3']['outch'], out_features=1))
-        self.regdiff = nn.Sequential(nn.Flatten(), nn.Linear(in_features=2*model_temp['blk3']['outch'], out_features=1))
+        self.reg = nn.Sequential(nn.Flatten(), nn.Linear(in_features=model_temp['blk5']['outch'], out_features=1))
+        self.regdiff = nn.Sequential(nn.Flatten(), nn.Linear(in_features=2*model_temp['blk5']['outch'], out_features=1))
 
     def _blk(self, blk: dict):
 
@@ -35,7 +36,7 @@ class NIRTNN2diff(nn.Module):
         return layer
 
     def forward_once(self, x):
-        return self.blk4(self.blk3(self.blk2(self.blk1(x))))
+        return self.blk5(self.blk4(self.blk3(self.blk2(self.blk1(x)))))
 
     def forward(self, x1, x2, x3):
         fx1 = self.forward_once(x1)
