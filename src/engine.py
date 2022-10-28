@@ -32,7 +32,8 @@ def eval_step(net: nn.Module, opt: optim.Optimizer, data: DataLoader, loss_fn: n
             r23 += r2score(predictions['y3'].squeeze(), Y['y3'].squeeze())
     
     l = len(data)
-    return dict(eval_loss=epoch_loss/l, r21=r21/l, r23=r23/l)
+    acc = (r21+r23)/(2*l)
+    return dict(eval_loss=epoch_loss/l, r21=r21/l, r23=r23/l, acc=acc)
 
 
 def test_step(net: nn.Module, opt: optim.Optimizer, data: DataLoader, loss_fn: nn.Module):

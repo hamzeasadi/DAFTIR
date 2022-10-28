@@ -9,9 +9,10 @@ class NIRTNN2diff(nn.Module):
     """
     doc
     """
-    def __init__(self, model_temp: dict=cfg.model_temp):
+    def __init__(self, model_temp: dict=cfg.model_temp, dp: float=0.1):
         super(NIRTNN2diff, self).__init__()
         self.temp = model_temp
+        self.dp = dp
         keys = list(model_temp.keys())
         self.fxx = self.fx(temp=model_temp)
         self.reg = nn.Sequential(nn.Flatten(), nn.Linear(in_features=model_temp[keys[-1]]['outch'], out_features=1))
@@ -27,7 +28,7 @@ class NIRTNN2diff(nn.Module):
             layer = nn.Sequential(layer, nn.AvgPool1d(kernel_size=3))
         
         if blk['dropout']:
-            layer = nn.Sequential(layer, nn.Dropout1d(p=0.2))
+            layer = nn.Sequential(layer, nn.Dropout1d(p=self.dp))
 
         return layer
 
@@ -63,7 +64,7 @@ class NIRTNN2diff(nn.Module):
 
 
 def main():
-    model = NIRTNN2diff()
+    model = NIRTNN2diff(dp=0.2)
     summary(model, input_size=[(10, 1, 140), (10, 1, 140), (10, 1, 140)])
     # x1 = torch.randn(size=(32, 1, 140))
     # x2 = torch.randn(size=(32, 1, 140))
