@@ -29,7 +29,7 @@ class NIRTNN2diff(nn.Module):
             layer = nn.Sequential(layer, nn.AvgPool1d(kernel_size=4))
         
         if blk['dropout']:
-            layer = nn.Sequential(layer, nn.Dropout1d(p=0.3))
+            layer = nn.Sequential(layer, nn.Dropout1d(p=0.2))
 
         return layer
 

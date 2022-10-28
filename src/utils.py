@@ -6,7 +6,7 @@ from torch import nn as nn, optim
 
 
 
-def build_opt(Net: nn.Module, opttype: str='adam', lr: float=3e-4):
+def build_opt(Net: nn.Module, opttype: str='adam', lr: float=9e-4):
     if opttype == 'adam':
         opt = optim.Adam(params=Net.parameters(), lr=lr)
     elif opttype == 'sgd':
