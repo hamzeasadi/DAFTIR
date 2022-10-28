@@ -44,17 +44,29 @@ class NIRTNN2diff(nn.Module):
         fx1 = self.forward_once(x1)
         fx2 = self.forward_once(x2)
         fx3 = self.forward_once(x3)
+
+        fx1n = fx1 + 1e-3 * torch.randn_like(fx1)
+        fx2n = fx2 + 1e-3 * torch.randn_like(fx2)
+        fx3n = fx3 + 1e-3 * torch.randn_like(fx3)
         
         y1 = self.reg(fx1)
         y3 = self.reg(fx3)
 
-        fx12 = torch.concat(tensors=(fx1, fx2), dim=1)
-        fx23 = torch.concat(tensors=(fx2, fx3), dim=1)
-        fx31 = torch.concat(tensors=(fx3, fx1), dim=1)
+        # fx12 = torch.concat(tensors=(fx1, fx2), dim=1)
+        # fx23 = torch.concat(tensors=(fx2, fx3), dim=1)
+        # fx31 = torch.concat(tensors=(fx3, fx1), dim=1)
 
-        y12 = self.regdiff(fx12)
-        y23 = self.regdiff(fx23)
-        y31 = self.regdiff(fx31)
+        fx12n = torch.concat(tensors=(fx1n, fx2n), dim=1)
+        fx23n = torch.concat(tensors=(fx2n, fx3n), dim=1)
+        fx31n = torch.concat(tensors=(fx3n, fx1n), dim=1)
+
+        # y12 = self.regdiff(fx12)
+        # y23 = self.regdiff(fx23)
+        # y31 = self.regdiff(fx31)
+
+        y12 = self.regdiff(fx12n)
+        y23 = self.regdiff(fx23n)
+        y31 = self.regdiff(fx31n)
 
         return dict(y12=y12, y23=y23, y31=y31, y1=y1, y3=y3, z1=fx1, z2=fx2, z3=fx3)
         # return y12, y23, y31, y1, y3, fx1, fx2, fx3
