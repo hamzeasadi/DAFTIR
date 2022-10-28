@@ -19,7 +19,8 @@ class NIRTNN2diff(nn.Module):
 
     def _blk(self, blk: dict):
         layer = nn.Sequential(
-            nn.Conv1d(in_channels=blk['inch'], out_channels=blk['outch'], kernel_size=blk['ks'], stride=blk['stride']),
+            nn.Conv1d(in_channels=blk['inch'], out_channels=blk['inch'], kernel_size=blk['ks'], stride=blk['stride'], groups=blk['inch']),
+            nn.Conv1d(in_channels=blk['inch'], out_channels=blk['outch'], kernel_size=1),
             nn.BatchNorm1d(num_features=blk['outch']), nn.LeakyReLU(negative_slope=0.2)
         )
         if blk['pool']:
