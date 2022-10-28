@@ -19,8 +19,8 @@ class NIRTNN2diff(nn.Module):
 
     def _blk(self, blk: dict):
         layer = nn.Sequential(
-            nn.Conv1d(in_channels=blk['inch'], out_channels=blk['inch'], kernel_size=blk['ks'], stride=blk['stride'], groups=blk['inch']),
-            nn.Conv1d(in_channels=blk['inch'], out_channels=blk['outch'], kernel_size=1),
+            nn.Conv1d(in_channels=blk['inch'], out_channels=blk['outch'], kernel_size=blk['ks'], stride=blk['stride']),
+            # nn.Conv1d(in_channels=blk['inch'], out_channels=blk['outch'], kernel_size=1),
             nn.BatchNorm1d(num_features=blk['outch']), nn.LeakyReLU(negative_slope=0.2)
         )
         if blk['pool']:
@@ -56,6 +56,7 @@ class NIRTNN2diff(nn.Module):
         y31 = self.regdiff(fx31)
 
         return dict(y12=y12, y23=y23, y31=y31, y1=y1, y3=y3, z1=fx1, z2=fx2, z3=fx3)
+        # return y12, y23, y31, y1, y3, fx1, fx2, fx3
 
 
 
@@ -63,11 +64,11 @@ class NIRTNN2diff(nn.Module):
 
 def main():
     model = NIRTNN2diff()
-    # summary(model, input_size=[(10, 1, 140), (10, 1, 140)])
-    x1 = torch.randn(size=(32, 1, 140))
-    x2 = torch.randn(size=(32, 1, 140))
-    out = model(x1, x2, x1)
-    print(out['y12'].shape, out['z1'].shape)
+    summary(model, input_size=[(10, 1, 140), (10, 1, 140), (10, 1, 140)])
+    # x1 = torch.randn(size=(32, 1, 140))
+    # x2 = torch.randn(size=(32, 1, 140))
+    # out = model(x1, x2, x1)
+    # print(out['y12'].shape, out['z1'].shape)
    
 
 
