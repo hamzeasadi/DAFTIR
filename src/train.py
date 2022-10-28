@@ -58,7 +58,7 @@ def main():
 
     tnn_model = m.NIRTNN2diff(dp=0.3)
     criterion = utils.NIRLoss()
-    opt = utils.build_opt(Net=tnn_model, opttype='adam', lr=0.02)
+    opt = utils.build_opt(Net=tnn_model, opttype='adam', lr=0.002)
     if args.train:
         train_loader, test_loader = ds.build_dataloader(batch_size=16, noise_level=1e-5, label_scale=0.1)
         train(model=tnn_model, train_loader=train_loader, test_loader=test_loader, optimizer=opt, loss_fn=criterion, epochs=args.epoch, wandbf=wbf)
