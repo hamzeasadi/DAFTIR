@@ -46,8 +46,8 @@ def train(config: dict = None):
 
 def main():
     print(sweep_config)
-    sweep_id = wandb.sweep(sweep_config, train, project='NIRTNN sweep')
-
+    sweep_id = wandb.sweep(sweep=sweep_config, project='NIRTNN sweep')
+    wandb.agent(sweep_id=sweep_id, function=train, count=100)
 
 
 if __name__ == '__main__':
