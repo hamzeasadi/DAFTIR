@@ -15,6 +15,7 @@ class NIRTNN2diff(nn.Module):
         self.blk1 = self._blk(blk=model_temp['blk1'])
         self.blk2 = self._blk(blk=model_temp['blk2'])
         self.blk3 = self._blk(blk=model_temp['blk3'])
+        self.blk4 = self._blk(blk=model_temp['blk4'])
 
         self.reg = nn.Sequential(nn.Flatten(), nn.Linear(in_features=model_temp['blk3']['outch'], out_features=1))
         self.regdiff = nn.Sequential(nn.Flatten(), nn.Linear(in_features=2*model_temp['blk3']['outch'], out_features=1))
@@ -26,7 +27,7 @@ class NIRTNN2diff(nn.Module):
             nn.BatchNorm1d(num_features=blk['outch']), nn.LeakyReLU(negative_slope=0.2)
         )
         if blk['pool']:
-            layer = nn.Sequential(layer, nn.AvgPool1d(kernel_size=4))
+            layer = nn.Sequential(layer, nn.AvgPool1d(kernel_size=3))
         
         if blk['dropout']:
             layer = nn.Sequential(layer, nn.Dropout1d(p=0.2))
@@ -34,7 +35,7 @@ class NIRTNN2diff(nn.Module):
         return layer
 
     def forward_once(self, x):
-        return self.blk3(self.blk2(self.blk1(x)))
+        return self.blk4(self.blk3(self.blk2(self.blk1(x))))
 
     def forward(self, x1, x2, x3):
         fx1 = self.forward_once(x1)
