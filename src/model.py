@@ -44,10 +44,11 @@ class NIRTNN2diff(nn.Module):
         fx1 = self.forward_once(x1)
         fx2 = self.forward_once(x2)
         fx3 = self.forward_once(x3)
-
-        fx1n = fx1 + 1e-3 * torch.randn_like(fx1)
-        fx2n = fx2 + 1e-3 * torch.randn_like(fx2)
-        fx3n = fx3 + 1e-3 * torch.randn_like(fx3)
+        
+        noise = 3e-4 * torch.randn_like(fx1)
+        fx1n = fx1 + noise
+        fx2n = fx2 + noise
+        fx3n = fx3 + noise
         
         y1 = self.reg(fx1)
         y3 = self.reg(fx3)

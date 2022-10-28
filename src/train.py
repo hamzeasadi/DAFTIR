@@ -10,6 +10,7 @@ import argparse
 import wandb
 from datetime import datetime
 import secret
+from torch.optim.lr_scheduler import ExponentialLR
 
 
 my_parser = argparse.ArgumentParser(prog='train', description="training configurations!!")
@@ -35,10 +36,12 @@ def train(model: nn.Module, train_loader: DataLoader, test_loader: DataLoader, o
     kt = utils.KeepTrack(path=cfg.paths['ckpoint'])
     min_eval_error = 1e+10
     model_name = f"tnn2diff.pt"
+    scheduler = ExponentialLR(optimizer, gamma=0.9)
     for epoch in range(epochs):
         train_error = engine.train_step(net=model, opt=optimizer, data=train_loader, loss_fn=loss_fn)
         test_error = engine.eval_step(net=model, opt=optimizer, data=test_loader, loss_fn=loss_fn)
-
+        scheduler.step()
+        
         if test_error['eval_loss'] < min_eval_error:
             min_eval_error = test_error['eval_loss']
             kt.save_ckp(net=model, opt=optimizer, epoch=epoch, min_error=min_eval_error, model_name=model_name)
@@ -58,7 +61,8 @@ def main():
 
     tnn_model = m.NIRTNN2diff(dp=0.3)
     criterion = utils.NIRLoss()
-    opt = utils.build_opt(Net=tnn_model, opttype='adam', lr=0.002)
+    opt = utils.build_opt(Net=tnn_model, opttype='adam', lr=0.01)
+    
     if args.train:
         train_loader, test_loader = ds.build_dataloader(batch_size=16, noise_level=1e-5, label_scale=0.1)
         train(model=tnn_model, train_loader=train_loader, test_loader=test_loader, optimizer=opt, loss_fn=criterion, epochs=args.epoch, wandbf=wbf)
