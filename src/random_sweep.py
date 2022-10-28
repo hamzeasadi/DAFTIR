@@ -9,7 +9,7 @@ import utils
 import datasetup as ds
 import conf as cfg
 import secret
-
+from datetime import datetime
 
 
 sweep_config = dict(
@@ -43,9 +43,18 @@ def train(config: dict = None):
         wandb.log(val_loss)
 
 
+def run_wandb():
+    dt = str(datetime.now())
+    st = dt.strip().split(' ')[-1].strip().split('.')[0].strip().split(':')
+    run_name = '-'.join(st) 
+    wandb.login(key=secret.wandb_api_key)
+    wandb.init(project='NIR DAR', name=run_name)
+
+
 
 def main():
-    print(sweep_config)
+    # print(sweep_config)
+    run_wandb()
     sweep_id = wandb.sweep(sweep=sweep_config, project='NIRTNN sweep')
     wandb.agent(sweep_id=sweep_id, function=train, count=100)
 
