@@ -132,3 +132,4 @@ data/
 **/wandb
 **/*/secret.py
 **/secret.py
+.DS_Store
