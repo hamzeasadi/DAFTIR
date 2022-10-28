@@ -13,7 +13,7 @@ from datetime import datetime
 
 
 sweep_config = dict(
-    method='random'
+    method='bayes'
 )
 
 metric = dict(
@@ -40,7 +40,7 @@ def train(config: dict = None):
         loss_fn = utils.NIRLoss()
         train_loss = engine.train_step(net=model, opt=opt, data=train_loader, loss_fn=loss_fn)
         val_loss = engine.eval_step(net=model, opt=opt, data=test_loader, loss_fn=loss_fn)
-        wandb.log(val_loss)
+        wandb.log({'acc': val_loss['acc']})
 
 
 def run_wandb():
@@ -56,7 +56,7 @@ def main():
     # print(sweep_config)
     run_wandb()
     sweep_id = wandb.sweep(sweep=sweep_config, project='NIRTNN sweep')
-    wandb.agent(sweep_id=sweep_id, function=train, count=100)
+    wandb.agent(sweep_id=sweep_id, function=train, count=50)
 
 
 if __name__ == '__main__':
