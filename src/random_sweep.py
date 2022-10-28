@@ -48,7 +48,7 @@ def run_wandb():
     st = dt.strip().split(' ')[-1].strip().split('.')[0].strip().split(':')
     run_name = '-'.join(st) 
     wandb.login(key=secret.wandb_api_key)
-    wandb.init(project='NIR DAR', name=run_name)
+    # wandb.init(project='NIR DAR', name=run_name)
 
 
 
