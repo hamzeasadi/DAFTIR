@@ -12,17 +12,12 @@ class NIRTNN2diff(nn.Module):
     def __init__(self, model_temp: dict=cfg.model_temp):
         super(NIRTNN2diff, self).__init__()
         self.temp = model_temp
-        self.blk1 = self._blk(blk=model_temp['blk1'])
-        self.blk2 = self._blk(blk=model_temp['blk2'])
-        self.blk3 = self._blk(blk=model_temp['blk3'])
-        self.blk4 = self._blk(blk=model_temp['blk4'])
-        self.blk5 = self._blk(blk=model_temp['blk5'])
-
-        self.reg = nn.Sequential(nn.Flatten(), nn.Linear(in_features=model_temp['blk5']['outch'], out_features=1))
-        self.regdiff = nn.Sequential(nn.Flatten(), nn.Linear(in_features=2*model_temp['blk5']['outch'], out_features=1))
+        keys = list(model_temp.keys())
+        self.fxx = self.fx(temp=model_temp)
+        self.reg = nn.Sequential(nn.Flatten(), nn.Linear(in_features=model_temp[keys[-1]]['outch'], out_features=1))
+        self.regdiff = nn.Sequential(nn.Flatten(), nn.Linear(in_features=2*model_temp[keys[-1]]['outch'], out_features=1))
 
     def _blk(self, blk: dict):
-
         layer = nn.Sequential(
             nn.Conv1d(in_channels=blk['inch'], out_channels=blk['outch'], kernel_size=blk['ks'], stride=blk['stride']),
             nn.BatchNorm1d(num_features=blk['outch']), nn.LeakyReLU(negative_slope=0.2)
@@ -35,8 +30,13 @@ class NIRTNN2diff(nn.Module):
 
         return layer
 
+    def fx(self, temp: dict):
+        modules = [nn.Sequential(self._blk(blk=temp[key])) for key in temp.keys()]
+        feature_xt = nn.Sequential(*modules)
+        return feature_xt
+
     def forward_once(self, x):
-        return self.blk5(self.blk4(self.blk3(self.blk2(self.blk1(x)))))
+        return self.fxx(x)
 
     def forward(self, x1, x2, x3):
         fx1 = self.forward_once(x1)

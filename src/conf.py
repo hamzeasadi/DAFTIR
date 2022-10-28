@@ -29,8 +29,8 @@ model_temp = dict(
     blk1=dict(inch=1, outch=8, ks=9, stride=5, pool=False, dropout=False),
     blk2=dict(inch=8, outch=16, ks=4, stride=2, pool=False, dropout=True),
     blk3=dict(inch=16, outch=32, ks=4, stride=2, pool=False, dropout=True),
-    blk4=dict(inch=32, outch=64, ks=3, stride=1, pool=False, dropout=True),
-    blk5=dict(inch=64, outch=32, ks=3, stride=1, pool=False, dropout=True)
+    blk4=dict(inch=32, outch=16, ks=3, stride=1, pool=True, dropout=True),
+
 )
 
 def conv_shape(layer: dict, input_size: int):
@@ -39,7 +39,8 @@ def conv_shape(layer: dict, input_size: int):
 
 
 def main():
-    # print(paths)
+    # key = list(paths.keys())
+    # print(key)
     in_size = 140
     for key in model_temp.keys():
         out_size = conv_shape(layer=model_temp[key], input_size=in_size)
