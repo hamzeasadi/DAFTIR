@@ -3,6 +3,7 @@ import torch
 from torch import nn as nn, functional as F
 from torchinfo import summary
 
+dev = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 # create model
 class NIRTNN2diff(nn.Module):
@@ -48,7 +49,7 @@ class NIRTNN2diff(nn.Module):
         fx2 = self.forward_once(x2)
         fx3 = self.forward_once(x3)
         
-        noise = 3e-4 * torch.randn_like(fx1)
+        noise = 3e-4 * torch.randn_like(fx1, device=dev)
         fx1n = fx1 + noise
         fx2n = fx2 + noise
         fx3n = fx3 + noise
