@@ -56,11 +56,13 @@ def train(model: nn.Module, train_loader: DataLoader, test_loader: DataLoader, o
 
 
 def main():
+    dev = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     wbf = args.wandb
     if wbf:
         run_wandb()
 
     tnn_model = m.NIRTNN2diff(model_temp=cfg.hyper['model'], dp=cfg.hyper['dp'])
+    tnn_model.to(dev)
     criterion = utils.NIRLoss()
     opt = utils.build_opt(Net=tnn_model, opttype=cfg.hyper['opt'], lr=cfg.hyper['lr'])
     

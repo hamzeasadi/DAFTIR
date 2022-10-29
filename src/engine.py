@@ -5,12 +5,13 @@ from matplotlib import pyplot as plt
 from torchmetrics import R2Score
 import torch
 
+dev = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 def train_step(net: nn.Module, opt: optim.Optimizer, data: DataLoader, loss_fn: nn.Module):
     epoch_loss = 0.0
     net.train()
     for X, Y in data:
-        predictions = net(X['x1'], X['x2'], X['x3'])
+        predictions = net(X['x1'].to(dev), X['x2'].to(dev), X['x3'].to(dev))
         loss = loss_fn(Y=Y, pred=predictions)
         opt.zero_grad()
         loss.backward()
@@ -25,7 +26,7 @@ def eval_step(net: nn.Module, opt: optim.Optimizer, data: DataLoader, loss_fn: n
     net.eval()
     with torch.no_grad():
         for X, Y in data:
-            predictions = net(X['x1'], X['x2'], X['x3'])
+            predictions = net(X['x1'].to(dev), X['x2'].to(dev), X['x3'].to(dev))
             loss = loss_fn(Y=Y, pred=predictions)
             epoch_loss += loss.item()
             r21 += r2score(predictions['y1'].squeeze(), Y['y1'].squeeze())
