@@ -23,7 +23,7 @@ paths = dict(
 
 # general configuration
 
-hyper = dict(lr=3e-4, dp=0.2, batch_size=4000, opt='adam')
+hyper = dict(lr=3e-4, dp=0.2, batch_size=400, opt='adam')
 
 
 # model template
