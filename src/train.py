@@ -62,7 +62,7 @@ def main():
 
     tnn_model = m.NIRTNN2diff(model_temp=cfg.hyper['model'], dp=cfg.hyper['dp'])
     criterion = utils.NIRLoss()
-    opt = utils.build_opt(Net=tnn_model, opttype=fg.hyper['adam'], lr=fg.hyper['lr'])
+    opt = utils.build_opt(Net=tnn_model, opttype=cfg.hyper['adam'], lr=cfg.hyper['lr'])
     
     if args.train:
         train_loader, test_loader = ds.build_dataloader(batch_size=cfg.hyper['batch_size'], noise_level=1e-5, label_scale=0.1)
