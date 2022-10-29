@@ -29,9 +29,9 @@ hyper = dict(lr=3e-4, dp=0.2, batch_size=400, opt='adam')
 # model template
 model_temp = dict(
     blk1=dict(inch=3, outch=8, ks=9, stride=5, pool=False, dropout=False),
-    blk2=dict(inch=8, outch=16, ks=5, stride=3, pool=False, dropout=True),
+    blk2=dict(inch=8, outch=16, ks=4, stride=2, pool=False, dropout=True),
     blk3=dict(inch=16, outch=32, ks=4, stride=2, pool=True, dropout=True),
-    # blk4=dict(inch=32, outch=32, ks=3, stride=1, pool=True, dropout=True),
+    blk4=dict(inch=32, outch=32, ks=3, stride=1, pool=True, dropout=True),
 )
 
 hyper['model'] = model_temp
