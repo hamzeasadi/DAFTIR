@@ -28,7 +28,7 @@ def run_wandb():
     st = dt.strip().split(' ')[-1].strip().split('.')[0].strip().split(':')
     run_name = '-'.join(st) 
     wandb.login(key=secret.wandb_api_key)
-    wandb.init(project='NIR DAR', name=run_name)
+    wandb.init(project='NIR DAR', name=run_name, config=cfg.hyper)
 
 
 
@@ -60,12 +60,12 @@ def main():
     if wbf:
         run_wandb()
 
-    tnn_model = m.NIRTNN2diff(dp=0.2)
+    tnn_model = m.NIRTNN2diff(model_temp=cfg.hyper['model'], dp=cfg.hyper['dp'])
     criterion = utils.NIRLoss()
-    opt = utils.build_opt(Net=tnn_model, opttype='adam', lr=3e-4)
+    opt = utils.build_opt(Net=tnn_model, opttype=fg.hyper['adam'], lr=fg.hyper['lr'])
     
     if args.train:
-        train_loader, test_loader = ds.build_dataloader(batch_size=32, noise_level=1e-5, label_scale=0.1)
+        train_loader, test_loader = ds.build_dataloader(batch_size=cfg.hyper['batch_size'], noise_level=1e-5, label_scale=0.1)
         train(model=tnn_model, train_loader=train_loader, test_loader=test_loader, optimizer=opt, loss_fn=criterion, epochs=args.epoch, wandbf=wbf)
 
     # evaluation
