@@ -34,7 +34,8 @@ sweep_config['parameters'] = parameters_dict
 def train(config: dict = None):
     with wandb.init(config=config):
         config = wandb.config
-        model = m.NIRTNN2diff(dp=config.dropout)
+        cfg.model_temp['blk4']['outch'] = config.batch_size
+        model = m.NIRTNN2diff(model_temp=cfg.model_temp, dp=config.dropout)
         opt = utils.build_opt(Net=model, opttype=config.optimizer, lr=config.learning_rate)
         train_loader, test_loader = ds.build_dataloader(batch_size=config.batch_size, label_scale=0.1)
         loss_fn = utils.NIRLoss()
@@ -54,8 +55,11 @@ def run_wandb():
 
 def main():
     # print(sweep_config)
+    dt = str(datetime.now())
+    st = dt.strip().split(' ')[-1].strip().split('.')[0].strip().split(':')
+    run_name = '-'.join(st)
     run_wandb()
-    sweep_id = wandb.sweep(sweep=sweep_config, project='NIRTNN sweep')
+    sweep_id = wandb.sweep(sweep=sweep_config, project=f'NIRTNN sweep-{run_name}')
     wandb.agent(sweep_id=sweep_id, function=train, count=50)
 
 
