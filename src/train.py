@@ -39,9 +39,10 @@ def train(model: nn.Module, train_loader: DataLoader, test_loader: DataLoader, o
     scheduler = ExponentialLR(optimizer, gamma=0.9)
     for epoch in range(epochs):
         train_error = engine.train_step(net=model, opt=optimizer, data=train_loader, loss_fn=loss_fn)
-        test_error = engine.eval_step(net=model, opt=optimizer, data=test_loader, loss_fn=loss_fn)
         scheduler.step()
+        test_error = engine.eval_step(net=model, opt=optimizer, data=test_loader, loss_fn=loss_fn)
         
+
         if test_error['eval_loss'] < min_eval_error:
             min_eval_error = test_error['eval_loss']
             kt.save_ckp(net=model, opt=optimizer, epoch=epoch, min_error=min_eval_error, model_name=model_name)
@@ -61,7 +62,7 @@ def main():
 
     tnn_model = m.NIRTNN2diff(dp=0.3)
     criterion = utils.NIRLoss()
-    opt = utils.build_opt(Net=tnn_model, opttype='adam', lr=0.01)
+    opt = utils.build_opt(Net=tnn_model, opttype='adam', lr=0.001)
     
     if args.train:
         train_loader, test_loader = ds.build_dataloader(batch_size=16, noise_level=1e-5, label_scale=0.1)
