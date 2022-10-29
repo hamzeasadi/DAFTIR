@@ -16,7 +16,10 @@ class NIRTNN2diff(nn.Module):
         keys = list(model_temp.keys())
         self.fxx = self.fx(temp=model_temp)
         self.reg = nn.Sequential(nn.Flatten(), nn.Linear(in_features=model_temp[keys[-1]]['outch'], out_features=1))
-        self.regdiff = nn.Sequential(nn.Flatten(), nn.Linear(in_features=2*model_temp[keys[-1]]['outch'], out_features=1))
+        self.regdiff = nn.Sequential(
+            nn.Flatten(), nn.Linear(in_features=2*model_temp[keys[-1]]['outch'], out_features=model_temp[keys[-1]]['outch']),
+            # nn.Linear(in_features=model_temp[keys[-1]]['outch'], out_features=1)
+            )
 
     def _blk(self, blk: dict):
         layer = nn.Sequential(
