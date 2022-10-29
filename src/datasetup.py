@@ -6,6 +6,7 @@ from matplotlib import pyplot as plt
 import torch
 from torch.utils.data import DataLoader, Dataset, random_split
 from itertools import combinations
+from scipy.signal import savgol_filter
 
 def create_noise_data(path: str, noise_factor:float=1e-3):
     dataframe = pd.read_csv(path)
@@ -23,6 +24,16 @@ def create_noise_data1(path: str):
     # noise_and_clean_data = np.vstack(tup=(datanp, dnp))
     return datanp
 
+def create_drive_data(path: str):
+    dataframe = pd.read_csv(path)
+    datanp = dataframe.values/5.0
+    data_drive = savgol_filter(x=datanp, window_length=7, polyorder=2, deriv=1)
+    datanp_expand = np.expand_dims(datanp, axis=1)
+    data_drive_expand = np.expand_dims(data_drive, axis=1)
+    data = np.concatenate((datanp_expand, data_drive_expand), axis=1)
+    # return noise_and_clean_data
+    return data
+
 class CornData(Dataset):
     """
     doc
@@ -36,14 +47,16 @@ class CornData(Dataset):
         self.samples_idx = list(combinations(iterable=np.arange(80), r=3))
 
     def get_data(self):
-        m5_spec_and_noise = create_noise_data1(path=self.path['m5_spec'])
+        # m5_spec_and_noise = create_noise_data1(path=self.path['m5_spec'])
+        m5_spec_and_noise = create_drive_data(path=self.path['m5_spec'])
         label0 = pd.read_csv(self.path['label0']).values
         # label = np.vstack(tup=(label0, label0))
         y = torch.from_numpy(label0)
         y = y - y.min() + self.ls
-        mp5_spec_and_noise = create_noise_data1(path=self.path['mp5_spec'])
-        X_src = torch.from_numpy(m5_spec_and_noise).unsqueeze(dim=1)
-        X_trg = torch.from_numpy(mp5_spec_and_noise).unsqueeze(dim=1)
+        # mp5_spec_and_noise = create_noise_data1(path=self.path['mp5_spec'])
+        mp5_spec_and_noise = create_drive_data(path=self.path['mp5_spec'])
+        X_src = torch.from_numpy(m5_spec_and_noise)
+        X_trg = torch.from_numpy(mp5_spec_and_noise)
         return X_src.type(torch.float32), X_trg.type(torch.float32), y.type(torch.float32)
 
     def __len__(self):
@@ -74,6 +87,10 @@ def build_dataloader(batch_size: int=32, noise_level: float=1e-3, label_scale:fl
 def main():
     dataset = CornData(path=cfg.paths, noise_level=3e-3, label_scale=0)
     print(dataset[0])
+    # for i in range(10):
+    #     plt.plot(deriv[i])
+    
+    # plt.show()
     
 
 
