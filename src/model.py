@@ -81,12 +81,12 @@ class NIRTNN2diff(nn.Module):
 
 
 def main():
-    model = NIRTNN2diff(dp=0.2)
-    summary(model, input_size=[(10, 1, 140), (10, 1, 140), (10, 1, 140)])
-    # x1 = torch.randn(size=(32, 1, 140))
-    # x2 = torch.randn(size=(32, 1, 140))
-    # out = model(x1, x2, x1)
-    # print(out['y12'].shape, out['z1'].shape)
+    model = NIRTNN2diff(model_temp=cfg.hyper['model'], dp=0.2)
+    # summary(model, input_size=[(10, 3, 140), (10, 3, 140), (10, 3, 140)])
+    x1 = torch.randn(size=(32, 3, 140))
+    x2 = torch.randn(size=(32, 3, 140))
+    out = model(x1, x2, x1)
+    print(out['y12'].shape, out['z1'].shape)
    
 
 
