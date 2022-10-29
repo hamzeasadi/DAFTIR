@@ -27,8 +27,8 @@ def create_noise_data1(path: str):
 def create_drive_data(path: str):
     dataframe = pd.read_csv(path)
     datanp = dataframe.values/5.0
-    data_drive = savgol_filter(x=datanp, window_length=5, polyorder=2, deriv=1)
-    data_drive2 = savgol_filter(x=datanp, window_length=5, polyorder=2, deriv=2)
+    data_drive = savgol_filter(x=datanp, window_length=7, polyorder=3, deriv=1)
+    data_drive2 = savgol_filter(x=datanp, window_length=7, polyorder=3, deriv=2)
 
     datanp_expand = np.expand_dims(datanp, axis=1)
     data_drive_expand = np.expand_dims(data_drive, axis=1)
