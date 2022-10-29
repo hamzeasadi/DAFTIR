@@ -65,7 +65,7 @@ def main():
     opt = utils.build_opt(Net=tnn_model, opttype='adam', lr=1e-3)
     
     if args.train:
-        train_loader, test_loader = ds.build_dataloader(batch_size=2000, noise_level=1e-5, label_scale=0.1)
+        train_loader, test_loader = ds.build_dataloader(batch_size=4000, noise_level=1e-5, label_scale=0.1)
         train(model=tnn_model, train_loader=train_loader, test_loader=test_loader, optimizer=opt, loss_fn=criterion, epochs=args.epoch, wandbf=wbf)
 
     # evaluation
