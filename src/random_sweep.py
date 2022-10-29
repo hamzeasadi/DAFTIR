@@ -10,7 +10,15 @@ import datasetup as ds
 import conf as cfg
 import secret
 from datetime import datetime
+import argparse
 
+
+# parser
+
+myparser = argparse.ArgumentParser(prog='random_sweep', description="get the number of count")
+myparser.add_argument('--count', '-c', metavar='count', type=int, default=100, help="number iteration for sweep")
+
+args = myparser.parse_args()
 
 sweep_config = dict(
     method='bayes'
@@ -61,7 +69,7 @@ def main():
     run_name = '-'.join(st)
     run_wandb()
     sweep_id = wandb.sweep(sweep=sweep_config, project=f'NIRTNN sweep-{run_name}')
-    wandb.agent(sweep_id=sweep_id, function=train, count=50)
+    wandb.agent(sweep_id=sweep_id, function=train, count=args.count)
 
 
 if __name__ == '__main__':
