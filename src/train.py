@@ -60,7 +60,7 @@ def main():
     if wbf:
         run_wandb()
 
-    tnn_model = m.NIRTNN2diff(dp=0.3)
+    tnn_model = m.NIRTNN2diff(dp=0.2)
     criterion = utils.NIRLoss()
     opt = utils.build_opt(Net=tnn_model, opttype='adam', lr=0.001)
     
