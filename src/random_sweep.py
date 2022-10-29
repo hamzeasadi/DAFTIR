@@ -26,7 +26,8 @@ parameters_dict = dict(
     dropout=dict(values=[0.1, 0.2, 0.3, 0.4, 0.5]),
     epochs=dict(value=1),
     learning_rate= dict(distribution='uniform', min=0.0001, max=0.1),
-    batch_size=dict(distribution='q_log_uniform_values', q=4, min=8, max=64)
+    batch_size=dict(distribution='q_log_uniform_values', q=4, min=8, max=64),
+    latent_size = dict(distribution='q_log_uniform_values', q=4, min=8, max=64)
 )
 sweep_config['parameters'] = parameters_dict
 
@@ -34,7 +35,7 @@ sweep_config['parameters'] = parameters_dict
 def train(config: dict = None):
     with wandb.init(config=config):
         config = wandb.config
-        cfg.model_temp['blk4']['outch'] = config.batch_size
+        cfg.model_temp['blk4']['outch'] = config.latent_size
         model = m.NIRTNN2diff(model_temp=cfg.model_temp, dp=config.dropout)
         opt = utils.build_opt(Net=model, opttype=config.optimizer, lr=config.learning_rate)
         train_loader, test_loader = ds.build_dataloader(batch_size=config.batch_size, label_scale=0.1)
