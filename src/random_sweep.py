@@ -48,8 +48,14 @@ def train(config: dict = None):
         config = wandb.config
 
         cfg.model_temp['blk1']['outch'] = config.blk1_out
+
+        cfg.model_temp['blk2']['inch'] = config.blk1_out
         cfg.model_temp['blk2']['outch'] = config.blk2_out
+
+        cfg.model_temp['blk3']['inch'] = config.blk2_out
         cfg.model_temp['blk3']['outch'] = config.blk3_out
+
+        cfg.model_temp['blk4']['inch'] = config.blk3_out
         cfg.model_temp['blk4']['outch'] = config.blk4_out
 
         model = m.NIRTNN2diff(model_temp=cfg.model_temp, dp=config.dropout)
