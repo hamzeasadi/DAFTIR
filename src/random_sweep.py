@@ -67,18 +67,17 @@ def train(config: dict = None):
         wandb.log({'acc': val_loss['acc']})
 
 
-def run_wandb():
-    run_name = str(datetime.now()).split('.')[0].strip()
+def run_sweep(sweep_configuration: dict, count: int):
+    run_name = str(datetime.now()).split(' ')[-1].strip().split('.')[0].strip()
     wandb.login(key=secret.wandb_api_key)
+    sweep_id = wandb.sweep(sweep=sweep_configuration, project=f'NIRTNN sweep-{run_name}')
+    wandb.agent(sweep_id=sweep_id, function=train, count=count)
 
 
 
 def main():
     # print(sweep_config)
-    run_name = str(datetime.now()).split('.')[0].strip()
-    run_wandb()
-    sweep_id = wandb.sweep(sweep=sweep_config, project=f'NIRTNN sweep-{run_name}')
-    wandb.agent(sweep_id=sweep_id, function=train, count=args.count)
+    run_sweep(sweep_configuration=sweep_config, count=args.count)
 
 
 if __name__ == '__main__':
