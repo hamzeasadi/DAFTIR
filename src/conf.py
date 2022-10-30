@@ -24,7 +24,7 @@ paths = dict(
 
 # general configuration
 
-hyper = dict(lr=3e-4, dp=0.2, batch_size=64, opt='adam')
+hyper = dict(lr=0.006696, dp=0.2, batch_size=28, opt='adam')
 
 # model template
 model_temp = dict(
