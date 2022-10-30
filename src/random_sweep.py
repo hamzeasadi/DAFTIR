@@ -32,9 +32,9 @@ sweep_config['metric'] = metric
 parameters_dict = dict(
     optimizer=dict(values=['adam', 'sgd']),
     dropout=dict(values=[0.1, 0.2, 0.3, 0.4, 0.5]),
-    epochs=dict(value=1),
+    epochs=dict(value=10),
     learning_rate= dict(distribution='uniform', min=0.0001, max=0.1),
-    batch_size=dict(distribution='q_log_uniform_values', q=4, min=8, max=64),
+    batch_size=dict(distribution='q_log_uniform_values', q=4, min=8, max=256),
     # blk1_out = dict(distribution='q_log_uniform_values', q=4, min=8, max=64),
     # blk2_out = dict(distribution='q_log_uniform_values', q=4, min=8, max=64),
     # blk3_out = dict(distribution='q_log_uniform_values', q=4, min=8, max=64),
@@ -57,14 +57,14 @@ def train(config: dict = None):
 
         # cfg.model_temp['blk4']['inch'] = config.blk3_out
         # cfg.model_temp['blk4']['outch'] = config.blk4_out
-
-        model = m.NIRTNN2diff(model_temp=cfg.model_temp, dp=config.dropout)
-        opt = utils.build_opt(Net=model, opttype=config.optimizer, lr=config.learning_rate)
-        train_loader, test_loader = ds.build_dataloader(batch_size=config.batch_size, label_scale=0.1)
-        loss_fn = utils.NIRLoss()
-        train_loss = engine.train_step(net=model, opt=opt, data=train_loader, loss_fn=loss_fn)
-        val_loss = engine.eval_step(net=model, opt=opt, data=test_loader, loss_fn=loss_fn)
-        wandb.log({'acc': val_loss['acc']})
+        for epoch in range(config.epochs):
+            model = m.NIRTNN2diff(model_temp=cfg.model_temp, dp=config.dropout)
+            opt = utils.build_opt(Net=model, opttype=config.optimizer, lr=config.learning_rate)
+            train_loader, test_loader = ds.build_dataloader(batch_size=config.batch_size, label_scale=0.1)
+            loss_fn = utils.NIRLoss()
+            train_loss = engine.train_step(net=model, opt=opt, data=train_loader, loss_fn=loss_fn)
+            val_loss = engine.eval_step(net=model, opt=opt, data=test_loader, loss_fn=loss_fn)
+            wandb.log({'acc': val_loss['acc']})
 
 
 def run_sweep(sweep_configuration: dict, count: int):
