@@ -47,16 +47,16 @@ def train(config: dict = None):
     with wandb.init(config=config):
         config = wandb.config
 
-        cfg.model_temp['blk1']['outch'] = config.blk1_out
+        # cfg.model_temp['blk1']['outch'] = config.blk1_out
 
-        cfg.model_temp['blk2']['inch'] = config.blk1_out
-        cfg.model_temp['blk2']['outch'] = config.blk2_out
+        # cfg.model_temp['blk2']['inch'] = config.blk1_out
+        # cfg.model_temp['blk2']['outch'] = config.blk2_out
 
-        cfg.model_temp['blk3']['inch'] = config.blk2_out
-        cfg.model_temp['blk3']['outch'] = config.blk3_out
+        # cfg.model_temp['blk3']['inch'] = config.blk2_out
+        # cfg.model_temp['blk3']['outch'] = config.blk3_out
 
-        cfg.model_temp['blk4']['inch'] = config.blk3_out
-        cfg.model_temp['blk4']['outch'] = config.blk4_out
+        # cfg.model_temp['blk4']['inch'] = config.blk3_out
+        # cfg.model_temp['blk4']['outch'] = config.blk4_out
 
         model = m.NIRTNN2diff(model_temp=cfg.model_temp, dp=config.dropout)
         opt = utils.build_opt(Net=model, opttype=config.optimizer, lr=config.learning_rate)
@@ -68,19 +68,14 @@ def train(config: dict = None):
 
 
 def run_wandb():
-    dt = str(datetime.now())
-    st = dt.strip().split(' ')[-1].strip().split('.')[0].strip().split(':')
-    run_name = '-'.join(st) 
+    run_name = str(datetime.now()).split('.')[0].strip()
     wandb.login(key=secret.wandb_api_key)
-    # wandb.init(project='NIR DAR', name=run_name)
 
 
 
 def main():
     # print(sweep_config)
-    dt = str(datetime.now())
-    st = dt.strip().split(' ')[-1].strip().split('.')[0].strip().split(':')
-    run_name = '-'.join(st)
+    run_name = str(datetime.now()).split('.')[0].strip()
     run_wandb()
     sweep_id = wandb.sweep(sweep=sweep_config, project=f'NIRTNN sweep-{run_name}')
     wandb.agent(sweep_id=sweep_id, function=train, count=args.count)
