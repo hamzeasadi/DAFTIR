@@ -25,8 +25,10 @@ args = my_parser.parse_args()
 
 def run_wandb():
     dt = str(datetime.now())
+    dd = dt.strip().split(' ')[0].strip()
     st = dt.strip().split(' ')[-1].strip().split('.')[0].strip().split(':')
-    run_name = '-'.join(st) 
+    tt = '-'.join(st) 
+    run_name = f"{dd}-{tt}"
     wandb.login(key=secret.wandb_api_key)
     wandb.init(project='NIR DAR', name=run_name, config=cfg.hyper)
 

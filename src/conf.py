@@ -1,4 +1,5 @@
 import os
+from datetime import datetime
 
 
 
@@ -44,13 +45,14 @@ def conv_shape(layer: dict, input_size: int):
 def main():
     # key = list(paths.keys())
     # print(key)
-    in_size = 140
-    for key in model_temp.keys():
-        out_size = conv_shape(layer=model_temp[key], input_size=in_size)
-        in_size = out_size
-        print(f"out-size={in_size}")
+    # in_size = 140
+    # for key in model_temp.keys():
+    #     out_size = conv_shape(layer=model_temp[key], input_size=in_size)
+    #     in_size = out_size
+    #     print(f"out-size={in_size}")
 
-    print(hyper)
+    # print(hyper)
+    print(datetime.now())
 
 
 if __name__ == '__main__':
