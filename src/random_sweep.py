@@ -35,10 +35,10 @@ parameters_dict = dict(
     epochs=dict(value=1),
     learning_rate= dict(distribution='uniform', min=0.0001, max=0.1),
     batch_size=dict(distribution='q_log_uniform_values', q=4, min=8, max=64),
-    blk1_out = dict(distribution='q_log_uniform_values', q=4, min=8, max=64),
-    blk2_out = dict(distribution='q_log_uniform_values', q=4, min=8, max=64),
-    blk3_out = dict(distribution='q_log_uniform_values', q=4, min=8, max=64),
-    blk4_out = dict(distribution='q_log_uniform_values', q=4, min=8, max=64)
+    # blk1_out = dict(distribution='q_log_uniform_values', q=4, min=8, max=64),
+    # blk2_out = dict(distribution='q_log_uniform_values', q=4, min=8, max=64),
+    # blk3_out = dict(distribution='q_log_uniform_values', q=4, min=8, max=64),
+    # blk4_out = dict(distribution='q_log_uniform_values', q=4, min=8, max=64)
 )
 sweep_config['parameters'] = parameters_dict
 
