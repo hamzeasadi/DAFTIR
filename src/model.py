@@ -74,7 +74,7 @@ class NIRTNN2diff(nn.Module):
         y23 = self.regdiff(fx23n)
         y31 = self.regdiff(fx31n)
 
-        return dict(y12=y12, y23=y23, y31=y31, y1=y1, y3=y3, z1=fx1, z2=fx2, z3=fx3)
+        return dict(y12=y12, y23=y23, y31=y31, y1=y1, y3=y3, z1=fx1n, z2=fx2n, z3=fx3n)
         # return y12, y23, y31, y1, y3, fx1, fx2, fx3
 
 
@@ -87,7 +87,7 @@ def main():
     x1 = torch.randn(size=(32, 3, 140))
     x2 = torch.randn(size=(32, 3, 140))
     out = model(x1, x2, x1)
-    print(out['y12'].shape, out['z1'].shape)
+    print(out['z1'].shape, out['z2'].shape)
    
 
 
