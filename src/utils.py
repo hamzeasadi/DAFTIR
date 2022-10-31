@@ -76,11 +76,13 @@ class NIRLoss(nn.Module):
         loss1 = self.crt(y_zero, torch.zeros_like(y_zero))
         loss2 = self.crt(yhat1.squeeze(), Y['y1'].squeeze())
         loss3 = self.crt(yhat3.squeeze(), Y['y3'].squeeze())
-
         loss4 = self.crt(pred['y1'].squeeze(), Y['y1'].squeeze())
         loss5 = self.crt(pred['y3'].squeeze(), Y['y3'].squeeze())
+
+        loss6 = self.RSD(Feature_s=pred['z1'].squeeze(), Feature_t=pred['z2'], tradeoff2=1e-2) 
+        loss7 = self.RSD(Feature_s=pred['z3'].squeeze(), Feature_t=pred['z2'], tradeoff2=1e-2)
         
-        loss = loss1 + loss2 + loss3 + loss4 + loss5
+        loss = loss1 + loss2 + loss3 + loss4 + loss5 + loss6 + loss7
 
         return loss
         
