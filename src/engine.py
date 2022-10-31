@@ -26,11 +26,11 @@ def eval_step(net: nn.Module, opt: optim.Optimizer, data: DataLoader, loss_fn: n
     net.eval()
     with torch.no_grad():
         for X, Y in data:
-            predictions = net(X['x1'].to(dev), X['x2'].to(dev), X['x3'].to(dev))
-            loss = loss_fn(Y=Y, pred=predictions)
-            epoch_loss += loss.item()
+            predictions = net(X['x1'].to(dev), X['x3'].to(dev), X['x2'].to(dev))
+            # loss = loss_fn(Y=Y, pred=predictions)
+            # epoch_loss += loss.item()
             r21 += r2score(predictions['y1'].squeeze().to(dev), Y['y1'].squeeze().to(dev))
-            r23 += r2score(predictions['y3'].squeeze().to(dev), Y['y3'].squeeze().to(dev))
+            r23 += r2score(predictions['y3'].squeeze().to(dev), Y['y2'].squeeze().to(dev))
     
     l = len(data)
     acc = (r21+r23)/(2*l)

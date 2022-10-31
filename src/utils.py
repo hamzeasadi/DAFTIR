@@ -79,10 +79,10 @@ class NIRLoss(nn.Module):
         loss4 = self.crt(pred['y1'].squeeze(), Y['y1'].squeeze())
         loss5 = self.crt(pred['y3'].squeeze(), Y['y3'].squeeze())
 
-        loss6 = self.RSD(Feature_s=pred['z1'].squeeze(), Feature_t=pred['z2'].squeeze(), tradeoff2=1e-2) 
-        loss7 = self.RSD(Feature_s=pred['z3'].squeeze(), Feature_t=pred['z2'].squeeze(), tradeoff2=1e-2)
+        # loss6 = self.RSD(Feature_s=pred['z1'].squeeze(), Feature_t=pred['z2'].squeeze(), tradeoff2=1e-2) 
+        # loss7 = self.RSD(Feature_s=pred['z3'].squeeze(), Feature_t=pred['z2'].squeeze(), tradeoff2=1e-2)
         
-        loss = loss1 + loss2 + loss3 + loss4 + loss5 + loss6 + loss7
+        loss = loss1 + loss2 + loss3 + loss4 + loss5 #+ loss6 + loss7
 
         return loss
         
