@@ -63,22 +63,22 @@ class NIRLoss(nn.Module):
 
 
     def forward(self, Y: dict, pred: dict):
-        loss1 = self.crt(pred['y12'].squeeze(), (Y['y1'] - Y['y2']).squeeze().to(dev))
-        loss2 = self.crt(pred['y23'].squeeze(), (Y['y2'] - Y['y3']).squeeze().to(dev))
-        loss3 = self.crt(pred['y31'].squeeze(), (Y['y3'] - Y['y1']).squeeze().to(dev))
-        loss4 = self.crt(pred['y1'].squeeze(), Y['y1'].squeeze().to(dev))
-        loss5 = self.crt(pred['y3'].squeeze(), Y['y3'].squeeze().to(dev))
+        # loss1 = self.crt(pred['y12'].squeeze(), (Y['y1'] - Y['y2']).squeeze().to(dev))
+        # loss2 = self.crt(pred['y23'].squeeze(), (Y['y2'] - Y['y3']).squeeze().to(dev))
+        # loss3 = self.crt(pred['y31'].squeeze(), (Y['y3'] - Y['y1']).squeeze().to(dev))
+        # loss4 = self.crt(pred['y1'].squeeze(), Y['y1'].squeeze().to(dev))
+        # loss5 = self.crt(pred['y3'].squeeze(), Y['y3'].squeeze().to(dev))
 
-        # y_zero = pred['y12'] + pred['y23'] + pred['y31']
-        # yhat1 = Y['y3'] - pred['y31']
-        # yhat3 = pred['y31'] + Y['y1']
+        y_zero = pred['y12'] + pred['y23'] + pred['y31']
+        yhat1 = Y['y3'] - pred['y31']
+        yhat3 = pred['y31'] + Y['y1']
     
-        # loss1 = self.crt(y_zero, torch.zeros_like(y_zero))
-        # loss2 = self.crt(yhat1.squeeze(), Y['y1'].squeeze())
-        # loss3 = self.crt(yhat3.squeeze(), Y['y3'].squeeze())
+        loss1 = self.crt(y_zero, torch.zeros_like(y_zero))
+        loss2 = self.crt(yhat1.squeeze(), Y['y1'].squeeze())
+        loss3 = self.crt(yhat3.squeeze(), Y['y3'].squeeze())
 
-        # loss4 = self.crt(pred['y1'].squeeze(), Y['y1'].squeeze())
-        # loss5 = self.crt(pred['y3'].squeeze(), Y['y3'].squeeze())
+        loss4 = self.crt(pred['y1'].squeeze(), Y['y1'].squeeze())
+        loss5 = self.crt(pred['y3'].squeeze(), Y['y3'].squeeze())
         
         loss = loss1 + loss2 + loss3 + loss4 + loss5
 
