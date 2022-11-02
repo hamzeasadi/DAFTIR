@@ -82,6 +82,49 @@ class CornData(Dataset):
         y3 = self.Y[self.samples_idx[idx][2]]
         return dict(x1=x1, x2=x2, x3=x3), dict(y1=y1, y2=y2, y3=y3)
 
+
+
+
+class NIRData(Dataset):
+    """
+    doc
+    """
+    def __init__(self, path, noise_level: float=1e-2, label_scale: float=0.1):
+        super().__init__()
+        self.path = path
+        self.nl = noise_level
+        self.ls = label_scale
+        self.X_src, self.X_trg, self.Y = self.get_data()
+        self.samples_idx = list(combinations(iterable=np.arange(80), r=3))
+
+    def get_data(self):
+        # m5_spec_and_noise = create_noise_data1(path=self.path['m5_spec'])
+        m5_spec_and_noise = create_drive_data(path=self.path['m5_spec'])
+        label0 = pd.read_csv(self.path['label0']).values
+        # label = np.vstack(tup=(label0, label0))
+        y = torch.from_numpy(label0)
+        y = y - y.min() + self.ls
+        # mp5_spec_and_noise = create_noise_data1(path=self.path['mp5_spec'])
+        mp5_spec_and_noise = create_drive_data(path=self.path['mp5_spec'])
+        X_src = torch.from_numpy(m5_spec_and_noise)
+        X_trg = torch.from_numpy(mp5_spec_and_noise)
+        return X_src.type(torch.float32), X_trg.type(torch.float32), y.type(torch.float32)
+
+    def sample(self, batch_size: int=32):
+        x = np.arange(80)
+        xs = np.random.choice(a=x, size=3*batch_size, replace=False)
+        xs1, xt, xs2 = np.split(xs, 3)
+        return xs1, xt, xs2
+
+    def get_batch(self, batch_size: int=16):
+        xs1_idx, xt_idx, xs2_idx = self.sample(batch_size=batch_size)
+        Xs1, Xt, Xs2 = self.X_src[xs1_idx], self.X_trg[xt_idx], self.X_src[xs2_idx]
+        ys1, yt, ys2 = self.Y[xs1_idx], self.Y[xt_idx], self.Y[xs2_idx]
+
+        return dict(x1=Xs1, x2=Xt, x3=Xs2), dict(y1=ys1, y2=yt, y3=ys2)
+
+
+
 def build_dataloader(batch_size: int=32, noise_level: float=1e-3, label_scale:float=1):
     dataset = CornData(path=cfg.paths, noise_level=noise_level, label_scale=label_scale)
     l = len(dataset)
@@ -96,19 +139,16 @@ def build_dataloader(batch_size: int=32, noise_level: float=1e-3, label_scale:fl
 
 
 def main():
-    dataset = CornData(path=cfg.paths, noise_level=3e-3, label_scale=0)
-    # print(dataset[0])
-    # for i in range(10):
-    #     plt.plot(deriv[i])
+    # dataset = CornData(path=cfg.paths, noise_level=3e-3, label_scale=0)
+    dataset = NIRData(path=cfg.paths, noise_level=0.001, label_scale=0.0)
+    X, Y = dataset.get_batch(batch_size=10)
+    print(X['x1'].shape, Y['y2'].shape)
+    # data = create_drive_data(path=cfg.paths['m5_spec'])
+
+    # for i in range(2):
+    #     plt.plot(data[0][i])
     
     # plt.show()
-
-    data = create_drive_data(path=cfg.paths['m5_spec'])
-
-    for i in range(3):
-        plt.plot(data[0][i])
-    
-    plt.show()
     
 
 

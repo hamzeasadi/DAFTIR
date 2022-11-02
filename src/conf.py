@@ -24,7 +24,7 @@ paths = dict(
 
 # general configuration
 
-hyper = dict(lr=0.006696, dp=0.2, batch_size=8, opt='adam')
+hyper = dict(lr=0.006696, dp=0.2, batch_size=32, opt='adam')
 
 # model template
 model_temp = dict(
@@ -52,6 +52,7 @@ def main():
 
     # print(hyper)
     print(datetime.now())
+
 
 
 if __name__ == '__main__':
