@@ -39,9 +39,9 @@ def create_drive_data(path: str):
 
     datanp_expand = np.expand_dims(datanp, axis=1)
     data_drive_expand = np.expand_dims(data_drive, axis=1)
-    data_drive2_expand = np.expand_dims(data_drive2, axis=1)
+    # data_drive2_expand = np.expand_dims(data_drive2, axis=1)
 
-    data = np.concatenate((datanp_expand, data_drive_expand, data_drive2_expand), axis=1)
+    data = np.concatenate((datanp_expand, data_drive_expand), axis=1)
     # return noise_and_clean_data
     return data
 
