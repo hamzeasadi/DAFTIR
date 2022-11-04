@@ -82,10 +82,10 @@ class NIRLoss(nn.Module):
         # loss6 = self.RSD(Feature_s=pred['z1'].squeeze(), Feature_t=pred['z2'].squeeze(), tradeoff2=1e-2) 
         # loss7 = self.RSD(Feature_s=pred['z3'].squeeze(), Feature_t=pred['z2'].squeeze(), tradeoff2=1e-2)
 
-        loss6 = self.MMD(x=pred['z1'].squeeze(), y=pred['z2'].squeeze(), kernel='rbf') 
-        loss7 = self.MMD(x=pred['z3'].squeeze(), y=pred['z2'].squeeze(), kernel='rbf')
+        # loss6 = self.MMD(x=pred['z1'].squeeze(), y=pred['z2'].squeeze(), kernel='rbf') 
+        # loss7 = self.MMD(x=pred['z3'].squeeze(), y=pred['z2'].squeeze(), kernel='rbf')
         
-        loss = loss1 + loss2 + loss3 + loss4 + loss5 + loss6 + loss7
+        loss = loss1 + loss2 + loss3 + loss4 + loss5# + loss6 + loss7
 
         return loss
         
